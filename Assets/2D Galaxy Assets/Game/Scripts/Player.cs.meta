@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 534946c7a8eb16e4981f0b3e8cb9c0fc
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _laser: {fileID: 478380112911004943, guid: fcef4afb6bf2fc24cbb5e508a726f626, type: 3}
+  - _tripleLaser: {fileID: 2652020446323757510, guid: 8403bf179979da94492222f228accbc7,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -10,6 +10,9 @@ public class PowerUp : MonoBehaviour {
     [SerializeField]
     private int _powerUpId; // 0 = tripleShot ; 1 = speedboost; 2 = shield
 
+    [SerializeField]
+    private AudioClip _audioClip;
+
     // Update is called once per frame
     void Update () {
         transform.Translate (Vector3.down * Time.deltaTime * _speed);
@@ -25,7 +28,7 @@ public class PowerUp : MonoBehaviour {
             Player player = other.GetComponent<Player> ();
 
             if (player != null) {
-
+                AudioSource.PlayClipAtPoint(_audioClip, Camera.main.transform.position, 1f);
                 if (_powerUpId == 0) {
                     // enable tripler shoot
                     player.setsCourutineForTripleShotOn ();

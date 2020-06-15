@@ -22,6 +22,17 @@ public class Player : MonoBehaviour {
     [SerializeField]
     private GameObject _shield;
 
+    [SerializeField]
+    private GameObject[] _player_hurt;
+
+    private UIManager _uiManager;
+    private GameManager _gameManager;
+    private Spawn_Manager _spawnManager;
+
+    private AudioSource _audioSource;
+    [SerializeField]
+    private AudioClip _audioClip;
+
     public float fireDelta = 0.2F;
     private float _nextFire = 0.2F;
     private float _myTime = 0.0F;
@@ -30,11 +41,31 @@ public class Player : MonoBehaviour {
     public bool haveSpeedBoost = false;
 
     public bool shieldsUp = false;
-    void Start () {
+    void Start () 
+    {
         transform.position = new Vector3 (0, 0, 0);
+
+        _audioSource = GetComponent<AudioSource>();
+
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+
+        if (_uiManager != null)
+        {
+            _uiManager.UpdateLives(lives);
+        }
+
+        _gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
+        _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<Spawn_Manager>();
+
+        if (_spawnManager != null)
+        {
+            _spawnManager.setsCourutineForSpawn();
+        }
     }
 
     // Update is called once per frame
+
     void Update () {
 
         playerMovement ();
@@ -43,6 +74,7 @@ public class Player : MonoBehaviour {
         _myTime += Time.deltaTime;
 
         if (Input.GetKeyDown (KeyCode.Space) || Input.GetMouseButtonDown (0) && _myTime > _nextFire) {
+            _audioSource.Play();
             shoot ();
         }
     }
@@ -50,6 +82,7 @@ public class Player : MonoBehaviour {
     private void shoot () {
 
         if (canTripleshot) {
+     
             Instantiate (_tripleLaser, transform.position, transform.rotation);
         } else {
             Instantiate (_laser, transform.position + new Vector3 (0, 1.28f, 0), transform.rotation);
@@ -99,17 +132,34 @@ public class Player : MonoBehaviour {
 
     public void Damage () {
 
+        
+
         if (shieldsUp)
         {
             _shield.SetActive(false);
             shieldsUp = false;
             return;
         }
-        lives--; 
         
+        lives--;
+        _uiManager.UpdateLives(lives);
+
+        if (lives == 2)
+        {
+            _player_hurt[0].SetActive(true);
+        }
+        else if (lives == 1)
+        {
+            _player_hurt[1].SetActive(true);
+        }
+
+
         if (lives < 1)
         {
             GameObject.Instantiate(_playerExplosion, new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
+            _gameManager.gameOver = true;
+            _uiManager.showTitleScreen();
+            AudioSource.PlayClipAtPoint(_audioClip, transform.position);
             Destroy(this.gameObject);
         }
     }

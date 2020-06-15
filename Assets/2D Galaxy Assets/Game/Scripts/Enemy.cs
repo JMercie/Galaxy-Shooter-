@@ -12,8 +12,16 @@ public class Enemy : MonoBehaviour
     [SerializeField]
     private GameObject _explosion;
 
-    void Start () {
-      
+    private UIManager _uiManager;
+
+    [SerializeField]
+    private AudioClip _audioClip;
+
+
+    void Start () 
+    {
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+  
     }
 
     // Update is called once per frame
@@ -40,8 +48,9 @@ public class Enemy : MonoBehaviour
             }
 
             // instanciate the explosion
+            
             GameObject.Instantiate(_explosion, new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
-
+            AudioSource.PlayClipAtPoint(_audioClip, transform.position);
             Destroy(this.gameObject);
 
         }
@@ -56,10 +65,12 @@ public class Enemy : MonoBehaviour
             // instanciate the explosion
             GameObject.Instantiate(_explosion, new Vector3(transform.position.x, transform.position.y, 0), Quaternion.identity);
 
+            if (_uiManager != null)
+            {
+                _uiManager.UpdateScore();
+            }
+            AudioSource.PlayClipAtPoint(_audioClip, transform.position);
             Destroy(this.gameObject);
-
-            
-
         }
             
     }
